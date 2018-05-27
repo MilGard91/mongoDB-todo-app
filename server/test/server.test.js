@@ -14,12 +14,13 @@ const todos = [{
 }];
 
 beforeEach(done => {
-  Todo.remove({}).then(() => {
-    return Todo.insertMany(todos);
-  }).then(() => done());
+  Todo.remove({})
+    .then(() => {
+      Todo.insertMany(todos);
+    }).then(() => done());
 });
 
-describr('POST /todos', () => {
+describe('POST /todos', () => {
   it('should create a new todo', done => {
     var text = 'Test todo text';
 
@@ -64,7 +65,7 @@ describr('POST /todos', () => {
 describe('GET /todos', () => {
   it('should get all todos', done => {
     request(app)
-      .get('todos')
+      .get('/todos')
       .expect(200)
       .expect(res => {
         expect(res.body.todos.length).toBe(2);
@@ -73,7 +74,7 @@ describe('GET /todos', () => {
   });
 });
 
-descibe('GET /todos/:id', () => {
+describe('GET /todos/:id', () => {
   it('should return doc', done => {
     request(app)
       .get(`/todos/${todos[0]._id.toHexString()}`)
