@@ -68,7 +68,7 @@ app.delete('/todos/:id', (req, res) => {
 
 app.patch('/todos/:id', (req, res) => {
   var id = req.params.id;
-  var body = _pick(req.body, ['text', 'complited']);
+  var body = _.pick(req.body, ['text', 'completed']);
   
   if(!ObjectID.isValid(id)){
     return res.status(404).send()
