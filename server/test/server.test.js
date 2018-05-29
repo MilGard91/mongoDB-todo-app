@@ -4,24 +4,10 @@ const {ObjectID} = require('mongodb');
 
 const {app} = require('../server');
 const {Todo} = require('../models/todo');
+const {todos, users, populateUsers, populateTodos} = require('./seed/seed');
 
-const todos = [{
-    _id: new ObjectID,
-    text: 'First test todo',
-    completed: false
-},{
-    _id: new ObjectID,
-    text: 'Second test todo',
-    completed: true,
-    comletedAt: 333
-}];
-
-beforeEach(done => {
-  Todo.remove({})
-    .then(() => {
-      Todo.insertMany(todos);
-    }).then(() => done()).catch(e => done(e));
-});
+beforeEach(populateUsers);
+beforeEach(populateTodos);
 
 describe('POST /todos', () => {
   it('should create a new todo', done => {
@@ -149,7 +135,7 @@ describe('PATCH /todos/:id', () => {
       completed: true
     }
     request(app)
-      .patch(`/todo/${id}`)
+      .patch(`/todos/${id}`)
       .send(todoUpdate)
       .expect(200)
       .expect((res) => {
@@ -161,13 +147,13 @@ describe('PATCH /todos/:id', () => {
   });
   it('should clear comletedAt when todo is not completed', done => {
     var hexId = todos[1]._id.toHexString();
-    var todoUpdte = {
+    var todoUpdate = {
       text: "Test todo update",
       completed: false
     }
 
     request(app)
-      .patch(`/todo/${hexId}`)
+      .patch(`/todos/${hexId}`)
       .send(todoUpdate)
       .expect(200)
       .expect((res) => {
