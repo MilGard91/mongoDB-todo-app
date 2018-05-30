@@ -120,7 +120,7 @@ app.get('/users/me', authenticate, (req, res) => {
 
 // POST /users/login {email, password}
 
-app.post('users/login' ,(req, res) => {
+app.post('/users/login' ,(req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
 
   User.findByCredentials(body.email, body.password).then(user => {
@@ -128,6 +128,14 @@ app.post('users/login' ,(req, res) => {
       res.header('x-auth', token).send(user);
     });
   }).catch(e => {
+    res.status(400).send();
+  });
+});
+// LOGOUT route
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }, () => {
     res.status(400).send();
   });
 });
